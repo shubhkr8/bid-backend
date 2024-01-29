@@ -16,13 +16,18 @@ mongoose.connect(
 
 const RFQ_Submit_Schema = new mongoose.Schema({
   rfq_no: String,
+  rfq_start_date: String,
+  rfq_end_date: String,
   buyer: String,
   buyer_no: String,
   bid_class: String,
   scope: String,
+  material_series: Array,
   material_line_items: String,
+  basic_value: String,
   delivery_pin: String,
   landing_cost: String,
+  gst_freight_tax: String,
   frieght: String,
   vendor_id: String,
   bid_type: String,
