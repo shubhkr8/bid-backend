@@ -11,7 +11,7 @@ app.use(cors());
 
 // Connect to MongoDB (replace 'your_mongodb_connection_string' with your actual MongoDB connection string)
 mongoose.connect(
-  "mongodb+srv://shubhamkr8:74824Singh0767@cluster0.sy4eond.mongodb.net/"
+  "mongodb+srv://shubhamkr8:74824Singh0767@cluster0.sy4eond.mongodb.net/RFQ_BID"
 );
 
 const RFQ_Submit_Schema = new mongoose.Schema({
