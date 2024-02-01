@@ -1,7 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import { RFQ_Submit_Model, RFQ_Acknowledge_Model } from "./models/Rfq.js";
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,36 +15,35 @@ mongoose.connect(
   "mongodb+srv://shubhamkr8:74824Singh0767@cluster0.sy4eond.mongodb.net/RFQ_BID"
 );
 
-const RFQ_Submit_Schema = new mongoose.Schema({
-  rfq_no: String,
-  rfq_start_date: String,
-  rfq_end_date: String,
-  buyer: String,
-  buyer_no: String,
-  bid_class: String,
-  scope: String,
-  material_series: Array,
-  material_line_items: String,
-  basic_value: String,
-  delivery_pin: String,
-  landing_cost: String,
-  gst_freight_tax: String,
-  frieght: String,
-  vendor_id: String,
-  bid_type: String,
-});
-
-const RFQ_Submit_Model = mongoose.model("RFQ_Submit", RFQ_Submit_Schema);
-
 app.use(bodyParser.json());
 
 app.get("/", async (req, res) => {
   res.send("Jai Shree Ram");
 });
 
+app.get("/api/ack-data", async (req, res) => {
+  try {
+    const data = await RFQ_Acknowledge_Model.find();
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.post("/api/submit-form", async (req, res) => {
   try {
     const formData = new RFQ_Submit_Model(req.body);
+    await formData.save();
+    res.json({ success: true, message: "Form submitted successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/acknowledge-form", async (req, res) => {
+  try {
+    const formData = new RFQ_Acknowledge_Model(req.body);
     await formData.save();
     res.json({ success: true, message: "Form submitted successfully!" });
   } catch (error) {
