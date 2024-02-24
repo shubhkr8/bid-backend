@@ -17,6 +17,22 @@ mongoose.connect(
 
 app.use(bodyParser.json());
 
+// Middleware to automatically increment case_no
+// app.use(async (req, res, next) => {
+//   try {
+//     const maxCaseNoDoc = await RFQ_Submit_Model.findOne()
+//       .sort({ case_no: -1 })
+//       .limit(1);
+//     const maxCaseNo = maxCaseNoDoc ? maxCaseNoDoc.case_no : 0;
+
+//     req.body.case_no = maxCaseNo + 1;
+//     next();
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// });
+
 app.get("/", async (req, res) => {
   res.send("Jai Shree Ram");
 });
@@ -45,7 +61,7 @@ app.post("/api/acknowledge-form", async (req, res) => {
   try {
     const formData = new RFQ_Acknowledge_Model(req.body);
     await formData.save();
-    res.json({ success: true, message: "Form submitted successfully!" });
+    res.json({ success: true, message: "Form Acknowledge successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }

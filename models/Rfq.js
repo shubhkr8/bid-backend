@@ -26,10 +26,7 @@ const RFQ_Acknowledge_Schema = new mongoose.Schema({
   buyer: String,
   buyer_no: String,
   scope: String,
-  material_series: Array,
   material_line_items: String,
-  shipping_address: String,
-  delivery_pin: String,
   bid_type: String,
 });
 
