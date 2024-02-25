@@ -20,6 +20,8 @@ const RFQ_Submit_Schema = new mongoose.Schema({
 });
 
 const RFQ_Acknowledge_Schema = new mongoose.Schema({
+  serial_no: String,
+  timestamp: String,
   rfq_no: String,
   rfq_start_date: String,
   rfq_end_date: String,
@@ -28,6 +30,7 @@ const RFQ_Acknowledge_Schema = new mongoose.Schema({
   scope: String,
   material_line_items: String,
   bid_type: String,
+  usr_name: String,
 });
 
 export const RFQ_Submit_Model = mongoose.model("rfq_submit", RFQ_Submit_Schema);
