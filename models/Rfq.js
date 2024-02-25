@@ -20,7 +20,12 @@ const RFQ_Submit_Schema = new mongoose.Schema({
 });
 
 const RFQ_Acknowledge_Schema = new mongoose.Schema({
-  serial_no: String,
+  serial_no: {
+    type: Number,
+    required: true,
+    unique: true,
+    min: 1,
+  },
   timestamp: String,
   rfq_no: String,
   rfq_start_date: String,

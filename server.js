@@ -47,6 +47,19 @@ app.get("/api/ack-data", async (req, res) => {
   }
 });
 
+app.get("/api/form-no", async (req, res) => {
+  try {
+    const highestSerialNo = await RFQ_Acknowledge_Model.findOne().sort({
+      serial_no: -1,
+    });
+    const nextSerialNo = parseInt(highestSerialNo.serial_no) + 1;
+    res.json({ nextSerialNo });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/api/submit-form", async (req, res) => {
   try {
     const formData = new RFQ_Submit_Model(req.body);
