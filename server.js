@@ -1,8 +1,10 @@
 import { RFQ_Submit_Model, RFQ_Acknowledge_Model } from "./models/Rfq.js";
+import { USER_Model } from "./models/User.js";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
+import bcrypt from "bcrypt";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,22 +18,6 @@ mongoose.connect(
 );
 
 app.use(bodyParser.json());
-
-// Middleware to automatically increment case_no
-// app.use(async (req, res, next) => {
-//   try {
-//     const maxCaseNoDoc = await RFQ_Submit_Model.findOne()
-//       .sort({ case_no: -1 })
-//       .limit(1);
-//     const maxCaseNo = maxCaseNoDoc ? maxCaseNoDoc.case_no : 0;
-
-//     req.body.case_no = maxCaseNo + 1;
-//     next();
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Internal Server Error" });
-//   }
-// });
 
 app.get("/", async (req, res) => {
   res.send("Jai Shree Ram");
@@ -77,6 +63,52 @@ app.post("/api/acknowledge-form", async (req, res) => {
     res.json({ success: true, message: "Form Acknowledge successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+// Register endpoint
+app.post("/api/register", async (req, res) => {
+  try {
+    const { usr_name, pswrd, role } = req.body;
+
+    // Check if username already exists
+    const existingUser = await USER_Model.findOne({ usr_name });
+    if (existingUser) {
+      return res.status(400).send("Username already exists");
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(pswrd, 10);
+
+    // Create a new user document with role
+    const newUser = new USER_Model({ usr_name, pswrd: hashedPassword, role });
+
+    // Save the new user document to the database
+    await newUser.save();
+
+    res.status(201).send("User registered successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error registering user");
+  }
+});
+
+// Login endpoint
+app.post("/api/login", async (req, res) => {
+  try {
+    const { usr_name, pswrd } = req.body;
+    const user = await USER_Model.findOne({ usr_name });
+    if (!user) {
+      return res.status(400).send("Invalid username or password");
+    }
+    const validPassword = await bcrypt.compare(pswrd, user.pswrd);
+    if (!validPassword) {
+      return res.status(400).send("Invalid username or password");
+    }
+    res.status(200).json({ message: "Login successful", role: user.role });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error logging in");
   }
 });
 
