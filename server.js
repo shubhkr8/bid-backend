@@ -1,4 +1,5 @@
 import { RFQ_Submit_Model, RFQ_Acknowledge_Model } from "./models/Rfq.js";
+import { Supplier_Model } from "./models/Supplier.js";
 import { USER_Model } from "./models/User.js";
 import express from "express";
 import mongoose from "mongoose";
@@ -46,6 +47,19 @@ app.get("/api/form-no", async (req, res) => {
   }
 });
 
+app.get("/api/supplier-form-no", async (req, res) => {
+  try {
+    const highestSerialNo = await Supplier_Model.findOne().sort({
+      serial_no: -1,
+    });
+    const nextSerialNo = parseInt(highestSerialNo.serial_no) + 1;
+    res.json({ nextSerialNo });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/api/submit-form", async (req, res) => {
   try {
     const formData = new RFQ_Submit_Model(req.body);
@@ -61,6 +75,16 @@ app.post("/api/acknowledge-form", async (req, res) => {
     const formData = new RFQ_Acknowledge_Model(req.body);
     await formData.save();
     res.json({ success: true, message: "Form Acknowledge successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/supplier", async (req, res) => {
+  try {
+    const formData = new Supplier_Model(req.body);
+    await formData.save();
+    res.json({ success: true, message: "Form Supplier successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
