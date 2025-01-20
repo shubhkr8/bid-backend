@@ -34,6 +34,16 @@ app.get("/api/ack-data", async (req, res) => {
   }
 });
 
+app.get("/api/supplier-data", async (req, res) => {
+  try {
+    const data = await Supplier_Model.find();
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/api/form-no", async (req, res) => {
   try {
     const highestSerialNo = await RFQ_Acknowledge_Model.findOne().sort({
