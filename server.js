@@ -52,7 +52,7 @@ app.get("/api/supplier-form-no", async (req, res) => {
     const highestSerialNo = await Supplier_Model.findOne().sort({
       serial_no: -1,
     });
-    const nextSerialNo = parseInt(highestSerialNo.serial_no) + 1;
+    const nextSerialNo = highestSerialNo ? parseInt(highestSerialNo?.serial_no) + 1 : 1;
     res.json({ nextSerialNo });
   } catch (error) {
     console.error(error);
