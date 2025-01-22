@@ -18,6 +18,7 @@ const Supplier_Schema = new mongoose.Schema({
   tag: String,
   gst: String,
   attachment_link: String,
+  submitted_by: String,
 });
 
 export const Supplier_Model = mongoose.model(
