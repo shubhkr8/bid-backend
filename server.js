@@ -83,7 +83,7 @@ app.post("/api/submit-form", async (req, res) => {
 app.post("/api/acknowledge-form", async (req, res) => {
   try {
     const response = await fetch("https://resoo-backend.onrender.com/api/form-no");
-    const { nextSerialNo } = response.data;
+    const { nextSerialNo } = await response.json();
     const formData = new RFQ_Acknowledge_Model({
       ...req.body,
       serial_no: nextSerialNo
@@ -98,7 +98,7 @@ app.post("/api/acknowledge-form", async (req, res) => {
 app.post("/api/supplier", async (req, res) => {
   try {
     const response = await fetch("https://resoo-backend.onrender.com/api/supplier-form-no");
-    const { nextSerialNo } = response.data;
+    const { nextSerialNo } = await response.json();
     const formData = new Supplier_Model({
       ...req.body,
       serial_no: nextSerialNo
