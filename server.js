@@ -82,7 +82,7 @@ app.post("/api/submit-form", async (req, res) => {
 
 app.post("/api/acknowledge-form", async (req, res) => {
   try {
-    const response = await axios.get("https://resoo-backend.onrender.com/api/form-no");
+    const response = await fetch("https://resoo-backend.onrender.com/api/form-no");
     const { nextSerialNo } = response.data;
     const formData = new RFQ_Acknowledge_Model({
       ...req.body,
@@ -97,7 +97,7 @@ app.post("/api/acknowledge-form", async (req, res) => {
 
 app.post("/api/supplier", async (req, res) => {
   try {
-    const response = await axios.get("https://resoo-backend.onrender.com/api/supplier-form-no");
+    const response = await fetch("https://resoo-backend.onrender.com/api/supplier-form-no");
     const { nextSerialNo } = response.data;
     const formData = new Supplier_Model({
       ...req.body,
@@ -106,6 +106,7 @@ app.post("/api/supplier", async (req, res) => {
     await formData.save();
     res.json({ success: true, message: "Form Supplier successfully!" });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
