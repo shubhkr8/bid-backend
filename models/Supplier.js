@@ -14,6 +14,7 @@ const Supplier_Schema = new mongoose.Schema({
   materail_1: String,
   materail_2: String,
   materail_3: String,
+  source: String,
   email: String,
   tag: Array,
   gst: String,
